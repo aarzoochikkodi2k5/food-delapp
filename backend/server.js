@@ -16,22 +16,34 @@ const PORT = process.env.PORT || 8000;
 
 // middleware
 app.use(express.json());
-app.use(cors());
+
+// ✅ Secure and flexible CORS setup
+app.use(cors({
+  origin: [
+    "https://food-del-frontend.onrender.com", // replace with your actual frontend Render URL
+    "https://food-del-admin.onrender.com"     // replace with your actual admin Render URL
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
 // Database connection
 connectToDataBase(`${process.env.MONGODB_URL}/food-del`);
 
-// api endpoints
+// API routes
 app.use("/api/food", foodRouter);
 app.use("/images", express.static("uploads"));
 app.use("/api/user", userRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 
+// Root route
 app.get("/", (req, res) => {
-  res.send("Server is working!");
+  res.send("✅ Food Delivery Backend is live and running!");
 });
 
+// Start server
 app.listen(PORT, () =>
-  console.log(`Server started on http://localhost:${PORT}`)
+  console.log(`🚀 Server started on http://localhost:${PORT}`)
 );
+
