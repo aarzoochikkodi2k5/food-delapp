@@ -429,4 +429,4 @@ export const slidesArray = [
   },
 ];
 
-export const url = "http://localhost:5000";
+export const url = import.meta.env.VITE_BASE_URL;
