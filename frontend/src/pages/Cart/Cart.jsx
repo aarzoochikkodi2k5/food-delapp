@@ -1,25 +1,24 @@
-import React, { useContext, useEffect, useState } from 'react'
-import {useNavigate} from "react-router-dom"
-import './Cart.css'
-import { StoreContext } from "../../context/StoreContext"
-import {url} from "../../assets/assets.js"
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import './Cart.css';
+import { StoreContext } from "../../context/StoreContext";
+import { url } from "../../assets/assets.js";
 
 const Cart = () => {
-    const [isButtonDisable, setIsButtonDisable] = useState(true);
+  const [isButtonDisable, setIsButtonDisable] = useState(true);
   const navigate = useNavigate();
 
   const { cartItems, food_list, removeFromCart, getTotalCartAmount, token } = useContext(StoreContext);
 
+  // Update button state whenever token or cart changes
   useEffect(() => {
-    if (!token) {
-      setIsButtonDisable(true);
-    } else if (getTotalCartAmount() <= 0) {
-      console.log(getTotalCartAmount);
+    const total = getTotalCartAmount();
+    if (!token || total <= 0) {
       setIsButtonDisable(true);
     } else {
       setIsButtonDisable(false);
     }
-  }, [token, getTotalCartAmount]);
+  }, [token, cartItems]); // depend on cartItems, not the function
 
   return (
     <div className="cart-container">
@@ -34,26 +33,26 @@ const Cart = () => {
         </div>
         <br />
         <hr />
-        {food_list.map((item, index) => {
+        {food_list.map((item) => {
           if (cartItems[item._id] > 0) {
             return (
-              <div className="cart-items-holder">
+              <div className="cart-items-holder" key={item._id}>
                 <div className="cart-items-title cart-items-item">
-                  <img src={`${url}/images/${item.image}`} />
+                  <img src={`${url}/images/${item.image}`} alt={item.name} />
                   <p>{item.name}</p>
                   <p>${item.price}</p>
                   <p>{cartItems[item._id]}</p>
                   <p>${item.price * cartItems[item._id]}</p>
-                  <p className="cross" onClick={() => removeFromCart(item._id)}>
-                    x
-                  </p>
+                  <p className="cross" onClick={() => removeFromCart(item._id)}>x</p>
                 </div>
                 <hr />
               </div>
             );
           }
+          return null;
         })}
       </div>
+
       <div className="cart-bottom">
         <div className="cart-total">
           <h2>Cart Totals</h2>
@@ -77,12 +76,13 @@ const Cart = () => {
               background: isButtonDisable ? "#ff63477d" : "tomato",
               cursor: isButtonDisable ? "no-drop" : "pointer",
             }}
-            title={isButtonDisable? (!token ? "Please login to proceed" : "Add items to the cart to proceed"): ""}
+            title={isButtonDisable ? (!token ? "Please login to proceed" : "Add items to the cart to proceed") : ""}
             onClick={() => navigate("/order")}
           >
             PROCEED TO CHECKOUT
           </button>
         </div>
+
         <div className="cart-promocode">
           <div>
             <p>If you have a promo code, Enter it here</p>
@@ -97,4 +97,4 @@ const Cart = () => {
   );
 }
 
-export default Cart
+export default Cart;
