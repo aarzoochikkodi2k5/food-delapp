@@ -10,15 +10,22 @@ const Cart = () => {
 
   const { cartItems, food_list, removeFromCart, getTotalCartAmount, token } = useContext(StoreContext);
 
-  // Update button state whenever token or cart changes
+  // Update button state whenever token or cartItems change
   useEffect(() => {
     const total = getTotalCartAmount();
+    console.log("Token:", token, "Cart total:", total); // Debug log
     if (!token || total <= 0) {
       setIsButtonDisable(true);
     } else {
       setIsButtonDisable(false);
     }
-  }, [token, cartItems]); // depend on cartItems, not the function
+  }, [token, cartItems]);
+
+  // Temporary debug to confirm button click
+  const handleCheckout = () => {
+    console.log("Checkout clicked!");
+    navigate("/order");
+  };
 
   return (
     <div className="cart-container">
@@ -77,7 +84,7 @@ const Cart = () => {
               cursor: isButtonDisable ? "no-drop" : "pointer",
             }}
             title={isButtonDisable ? (!token ? "Please login to proceed" : "Add items to the cart to proceed") : ""}
-            onClick={() => navigate("/order")}
+            onClick={handleCheckout}
           >
             PROCEED TO CHECKOUT
           </button>
@@ -98,3 +105,4 @@ const Cart = () => {
 }
 
 export default Cart;
+
