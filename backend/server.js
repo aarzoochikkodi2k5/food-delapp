@@ -18,14 +18,17 @@ const PORT = process.env.PORT || 8000;
 app.use(express.json());
 
 // ✅ Secure and flexible CORS setup
-app.use(cors({
-  origin: [
-    "https://food-del-frontend.onrender.com", // replace with your actual frontend Render URL
-    "https://food-del-admin.onrender.com"     // replace with your actual admin Render URL
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: [
+      "https://food-delapp-frontend.onrender.com", // ✅ Correct frontend URL
+      "https://food-delapp-admin.onrender.com"     // optional: if you have admin
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
 
 // Database connection
 connectToDataBase(`${process.env.MONGODB_URL}/food-del`);
